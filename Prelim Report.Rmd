@@ -1,5 +1,5 @@
 ---
-title: 'Prelim Report'
+title: 'Prelim Report STAT373'
 author: 'Riley McIvor'
 date: '11/4/2025'
 subject: 'Stat373'
