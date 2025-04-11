@@ -27,14 +27,25 @@ Additionally, vehicles are defined as any transportation method involved in the 
 
 Finally, the data set refers to Boroughs, which is an administrative district of a larger encompassing area. In New York specifically, the five Boroughs are Manhattan, Brooklyn, Queens, The Bronx and Staten Island.
 
+A research paper from @1961study presents results from a thorough and controlled study. The study was conducted on fatal crashes in New York, with a sample size of 43, and concluded that the most common differences between drivers involved in the crashes and those who were not were alcohol concentration, proximity to their home, and those involved in criminal activity.
+
+This paper had extreme attention to detail in its data set, notably attributable to the small sample size. This meant that each crash would be able to be catagorised by variables such as driver alcohol content, medical history, age, gender (although there were no female drivers in this study), and socioeconomic status.
+
+Another paper conducted between 2013-2023 suggests that the decline of taxis, as well as the registration of newer vehicles has led to a decline in traffic accidents. @2013study also observed the dynamics of accidents in relation to Covid-19, presenting the notable drop in all traffic accidents, especially those of high severity during spikes of coronavirus cases.
+
 ## Research Question
 
 In this report, analysis will be performed in order to investigate the dynamics of New York Boroughs regarding motor vehicle collisions. This will be broken down into several questions.
 
 -   Which New York Borough is the most "dangerous"?
 -   How have the dynamics of vehicle collisions changed over time?
+-   What are the most common attributes of a serious crash?
 
 Additionally, we will examine if this data set, and the transformations on the data, are useful and/or practical for answering these questions.
+
+In answering these questions, it would be enlightening to make comparisons with existing results, and thus creating an answer for the final question. The scope of this data set is unimaginably wide, and presenting the findings of this study, alongside the findings of other sources, allows for a deeper understanding of useful/impractical data.
+
+The importance of answering the final question comes from the notion of efficient and effective data sampling. Understanding if effective data-wrangling may produce rich results even under scrutinous conditions is key to exploratory data analysis. 
 
 ## Rationale
 
@@ -48,24 +59,37 @@ This data set, due to its exhaustive coverage, has many issues and limitations, 
 
 The data is further limited by the data collection, which is largely inconsistent. Many observations have blank details in multiple variables, with the only consistently filled variable being date. Due to the data being compiled largely from 3rd party sources, it is understandable that the data collection is inconsistent.
 
-For the analysis, the prime variables that will be observed are Borough, vehicle type code, date and injuries. The analysis of these variables will allow for a deep understanding of the severity, location, and details of the collisions, without complicating the data.
+In comparison to the sample used in the study by @1961study, this set contains much more inconsistencies, and a lot less variables that would aid in an extremely thorough analysis of the microcosms of the vehicle collisions.
+
+For the analysis, the prime variables that will be observed are Borough, vehicle type code, contributing factor, date and injuries. The analysis of these variables will allow for a deep understanding of the severity, location, and details of the collisions, without complicating the data.
+
+-   Vehicle type code would allow to identify top contributers to crashes, and observe the most 'dangerous' vehicle.
+-   Contributing factor allows for an understanding of the dynamics of the crash, and may indicate which vehicles are involved in crashes for recurring reasons.
+-   Data is useful for plotting relationships over time, and adds structure to the data set.
+-   Injuries (as well as fatalities) indicate the severity of a crash.
 
 ## Exploratory Data Analysis
 
 In order to provide suitable analysis, some exhaustive data wrangling must be performed. The first step in analysis will be filtering the data heavily:
 
-1.  Creating a new data frame, which has been filtered to remove observations that have blank entries in vehicle type codes.
-2.  Selecting 9 key variables, to remove unnecessary cluttering in the data frame.
+1.  Creating a new data frame, which has been filtered to remove observations that have blank entries in vehicle type codes and contributing factor\*.
+2.  Selecting 14\* key variables, to remove unnecessary cluttering in the data frame.
 3.  Mutating to create a new variable, number of vehicles, which displays how many vehicles are involved in a collision
 4.  Further filtering on the frame to remove observations with blank spaces in Borough entries, as well as fixing the date variable so that it is recognised by R as a date.
 
 Further, the data frame contains thousands of unique observations for vehicle type code, so making a frame that only includes the top 20 and top 5 vehicle most frequent vehicle types would aid in analysis. To do this courtesy of @StatGlobe, a sorted table of the vehicle types must be made, which is then made into a tibble, as the slice function can not be done on tables. Once the tibble is sliced for the top 50 entries, unique identical entries (Taxi and TAXI for example) are combined, and new frames including the combined top 20 and top 5 vehicles are made.
+
+Another data frame is to be created in which the data is pivoted longer with respect to the 5 vehicle type codes, so that each crash is represented in 2-5 observations. This will allow for each observation to have an individual contributing factor\*.
 
 From this, plots can be made with ggplot. The first planned plot is a point plot showing the relationship between number of vehicles and number of people injured, faceted by Borough, and coloured by vehicle code.
 
 The second plot is a ridgeplot, showing crash density throughout time, by vehicle type.
 
 These two plots in particular will be vital in answering the research questions, along with relevant summary statistics when required.
+
+Moreover, plots can be made to show the relationships of contributing factor with other key variables\*.
+
+[\*There may be a separate frame in which contributing factor is included, as well as an original where it has been deselected. Many observations do not have entries in contributing factor, and if the filtered version has too little observations this idea will be abandoned. The current version has selected 9 variables, not including contributing factor, but analysis on this could prove to be interesting]
 
 ## Conclusion
 
