@@ -4,7 +4,8 @@ author: 'Riley McIvor'
 date: '11/4/2025'
 subject: 'Stat373'
 bibliography: bibliography.bib
-abstract: "PLACEHOLDER"
+abstract: "github repository: https://github.com/Derboshr/Assignment-Repository"
+
 output: pdf_document
 toc: true
 ---
