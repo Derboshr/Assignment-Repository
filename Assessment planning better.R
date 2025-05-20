@@ -1,6 +1,6 @@
 library(readr)
 library(tidyverse)
-setwd("C:\\Users\\riley\\OneDrive\\Desktop\\University\\2025 Autumn\\STAT373\\Assignment-Repository")
+setwd("\\Assignment-Repository")
 #find out how to do relative path for setwd
 unzip("Motor_Vehicle_Collisions_-_Crashes.zip", "Motor_Vehicle_Collisions_-_Crashes.csv")
 Motor_Vehicle_Collisions_Crashes<-read.csv("Motor_Vehicle_Collisions_-_Crashes.csv")
@@ -11,8 +11,8 @@ Motor_crash_better <- filter(Motor_Vehicle_Collisions_Crashes, VEHICLE.TYPE.CODE
                               | VEHICLE.TYPE.CODE.1 !="" & VEHICLE.TYPE.CODE.2 !="" & VEHICLE.TYPE.CODE.3 !="" & VEHICLE.TYPE.CODE.4 !=""
                               | VEHICLE.TYPE.CODE.1 !="" & VEHICLE.TYPE.CODE.2 !="" & VEHICLE.TYPE.CODE.4 !="" & VEHICLE.TYPE.CODE.3 !="" & VEHICLE.TYPE.CODE.5 !="")
 #data frame that only includes entries with full vehicle lists
-Motor_crash_better <- select(Motor_crash_better, CRASH.DATE, BOROUGH, NUMBER.OF.PERSONS.INJURED, NUMBER.OF.PERSONS.KILLED, VEHICLE.TYPE.CODE.1, VEHICLE.TYPE.CODE.2, VEHICLE.TYPE.CODE.3, VEHICLE.TYPE.CODE.4, VEHICLE.TYPE.CODE.5)
-
+Motor_crash_better <- select(Motor_crash_better, CRASH.DATE, BOROUGH, NUMBER.OF.PERSONS.INJURED, NUMBER.OF.PERSONS.KILLED, VEHICLE.TYPE.CODE.1, VEHICLE.TYPE.CODE.2, VEHICLE.TYPE.CODE.3, VEHICLE.TYPE.CODE.4, VEHICLE.TYPE.CODE.5,
+                               CONTRIBUTING.FACTOR.VEHICLE.1, CONTRIBUTING.FACTOR.VEHICLE.2, CONTRIBUTING.FACTOR.VEHICLE.3, CONTRIBUTING.FACTOR.VEHICLE.4, CONTRIBUTING.FACTOR.VEHICLE.5, C)
 Motor_crash_better <- Motor_crash_better %>%
   mutate(NO.VEHICLES= ifelse(VEHICLE.TYPE.CODE.5 != "", 5, ifelse(VEHICLE.TYPE.CODE.4 != "", 4, 
                                                                   ifelse(VEHICLE.TYPE.CODE.3 != "", 3, 
@@ -68,21 +68,13 @@ vehicle2_sort <- sort(table(vehicle1), decreasing = TRUE)
 
 view(vehicle2_sort)
 
-vehicle2_sort[2]
-
-vehicle2_sort[,1]
-
-vehicle2_sort["vehicle1"]
-
 cool<-sort(table(Motor_crash_better$VEHICLE.TYPE.CODE.1), decreasing = TRUE)
-view(cool)
 vehicle_names <- names(vehicle2_sort)
-view(vehicle_names)
 
 vehiclesorted <- tibble(vehicle_names, vehicle2_sort)
 #making slice able to be used
 
-vehiclesorted <- slice_head(vehiclesorted, n = 50)
+vehiclesorted10 <- slice_head(vehiclesorted, n = 10)
 #combining cases where the names are the same
 Motor_crash_better$VEHICLE.TYPE.CODE.1[Motor_crash_better$VEHICLE.TYPE.CODE.1 == "TAXI"] = "Taxi"
 Motor_crash_better$VEHICLE.TYPE.CODE.2[Motor_crash_better$VEHICLE.TYPE.CODE.2 == "TAXI"] = "Taxi"
@@ -130,4 +122,27 @@ Motor_crash_vehicle_slim <- filter(Motor_crash_better, VEHICLE.TYPE.CODE.1 == "S
                                    |VEHICLE.TYPE.CODE.1 =="VAN"|VEHICLE.TYPE.CODE.1 =="Pick-up Truck"|VEHICLE.TYPE.CODE.1 =="OTHER"|VEHICLE.TYPE.CODE.1 =="Box Truck"|VEHICLE.TYPE.CODE.1 =="SMALL COM VEH(4 TIRES)"|VEHICLE.TYPE.CODE.1 =="LARGE COM VEH(6 OR MORE TIRES)"
                                    |VEHICLE.TYPE.CODE.1 =="LIVERY VEHICLE"|VEHICLE.TYPE.CODE.1 =="Motorcycle"|VEHICLE.TYPE.CODE.1 =="Bike"|VEHICLE.TYPE.CODE.1 =="Van"|VEHICLE.TYPE.CODE.1 =="Ambulance"|VEHICLE.TYPE.CODE.1 =="Tractor Truck Diesel"|VEHICLE.TYPE.CODE.1 =="Dump"|VEHICLE.TYPE.CODE.1 =="Convertible")
                                        
-                                       
+#trying to pull factor variable
+Motor_crash_factor <- select(Motor_crash_better, CRASH.DATE, BOROUGH, NUMBER.OF.PERSONS.INJURED, NUMBER.OF.PERSONS.KILLED, VEHICLE.TYPE.CODE.1, VEHICLE.TYPE.CODE.2, VEHICLE.TYPE.CODE.3, VEHICLE.TYPE.CODE.4, VEHICLE.TYPE.CODE.5, CONTRIBUTING.FACTOR.VEHICLE.1, CONTRIBUTING.FACTOR.VEHICLE.2, CONTRIBUTING.FACTOR.VEHICLE.3, CONTRIBUTING.FACTOR.VEHICLE.4, CONTRIBUTING.FACTOR.VEHICLE.5)
+Motor_crash_factor <- filter(Motor_crash_factor, CONTRIBUTING.FACTOR.VEHICLE.1 !="" & CONTRIBUTING.FACTOR.VEHICLE.2 !=""
+                             | CONTRIBUTING.FACTOR.VEHICLE.1 !="" & CONTRIBUTING.FACTOR.VEHICLE.2 !="" & CONTRIBUTING.FACTOR.VEHICLE.3 !=""
+                             | CONTRIBUTING.FACTOR.VEHICLE.1 !="" & CONTRIBUTING.FACTOR.VEHICLE.2 !="" & CONTRIBUTING.FACTOR.VEHICLE.3 !="" & CONTRIBUTING.FACTOR.VEHICLE.4 !=""
+                             | CONTRIBUTING.FACTOR.VEHICLE.1 !="" & CONTRIBUTING.FACTOR.VEHICLE.2 !="" & CONTRIBUTING.FACTOR.VEHICLE.3 !="" & CONTRIBUTING.FACTOR.VEHICLE.4 !="" & CONTRIBUTING.FACTOR.VEHICLE.5 !="")
+
+motor_factor1 <- pull(Motor_crash_factor, var = CONTRIBUTING.FACTOR.VEHICLE.1)
+
+factor_sort <- sort(table(motor_factor1), decreasing = TRUE)
+view(factor_sort)
+
+#setting up for tibble
+factor_names<-names(factor_sort)
+
+factor_sorted <-tibble(factor_names,factor_sort)
+
+useful_factor <-filter(factor_sorted, factor_names != "Unspecified")
+
+#combining cases with similar variable names
+Motor_crash_factor$CONTRIBUTING.FACTOR.VEHICLE.1[Motor_crash_factor$CONTRIBUTING.FACTOR.VEHICLE.1 == "Cell Phone (hand-Held)" | Motor_crash_factor$CONTRIBUTING.FACTOR.VEHICLE.1 == "Texting"] = "Cell Phone (hand-held)"
+
+Motor_crash_better<-pivot_longer(Motor_crash_better, cols =5:9, names_to = "Contributing Vehicle", values_to = "Vehicle")
+
